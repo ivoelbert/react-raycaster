@@ -3,19 +3,24 @@ import { Bar } from './bar';
 import { RayCaster, Intersection } from './raycaster';
 import { Scene } from './scene';
 import { mapLinear, createArray } from './utils';
+import { Projection } from './projection';
 
 export class Camera {
     private pos: Point;
     private angle: number;
 
-    constructor(private resolution: number, private fov: number) {
+    constructor(private resolution: number, private fov: number, private projection: Projection) {
         this.pos = new Point(0, 0);
         this.angle = 0;
     }
 
-    move(movement: Point): void {
-        this.pos.x += movement.x;
-        this.pos.y += movement.y;
+    move(deltaForwards: number, deltaSideways: number): void {
+        const forwardsX = Math.cos(this.angle) * deltaForwards;
+        const forwardsY = Math.sin(this.angle) * deltaForwards;
+        const sidewaysX = Math.cos(this.angle + Math.PI * 0.5) * deltaSideways;
+        const sidewaysY = Math.sin(this.angle + Math.PI * 0.5) * deltaSideways;
+        this.pos.x += forwardsX + sidewaysX;
+        this.pos.y += forwardsY + sidewaysY;
     }
 
     rotate(ang: number): void {
@@ -25,14 +30,14 @@ export class Camera {
     render(scene: Scene): Bar[] {
         const raycaster = new RayCaster(this.pos);
 
-        const minAng = this.angle - this.fov * 0.5;
-        const maxAng = this.angle + this.fov * 0.5;
+        const minAng = -this.fov * 0.5;
+        const maxAng = this.fov * 0.5;
 
         return createArray(this.resolution, (idx) => {
             const ang = mapLinear(idx, 0, this.resolution - 1, minAng, maxAng);
 
             const intersections = scene.traverse((boundary) => {
-                return raycaster.castAtAngle(ang, boundary);
+                return raycaster.castAtAngle(this.angle + ang, boundary);
             });
 
             const nonNilIntersections = intersections.filter(
@@ -44,7 +49,7 @@ export class Camera {
             }
 
             const closest = closestIntersection(nonNilIntersections);
-            const height = 1 / (closest.distance + 1);
+            const height = this.projection(closest.distance, ang);
 
             return new Bar(height, closest.boundary.color);
         });

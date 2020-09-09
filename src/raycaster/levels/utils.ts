@@ -4,7 +4,9 @@ import { createArray } from '../utils';
 
 export function createPolygon(vertices: Point[], color: string): Boundary[] {
     return createArray(vertices.length, (idx) => {
-        return new Boundary(vertices[idx], vertices[(idx + 1) % vertices.length], color);
+        const p1 = vertices[idx];
+        const p2 = vertices[(idx + 1) % vertices.length];
+        return new Boundary(p1, p2, color);
     });
 }
 
@@ -27,14 +29,12 @@ export function createRegularPolygon(
     sides: number,
     radius: number,
     ang: number,
-    color: string,
-    hollow: boolean = false
+    color: string
 ): Boundary[] {
     const angStep = (Math.PI * 2) / sides;
 
     const vertices = createArray(sides, (idx) => {
-        const step = hollow ? idx * angStep : -idx * angStep;
-        const angle = ang - step;
+        const angle = ang + idx * angStep;
         const px = radius * Math.cos(angle) + center.x;
         const py = radius * Math.sin(angle) + center.y;
 

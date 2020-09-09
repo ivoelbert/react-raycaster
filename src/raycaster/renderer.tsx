@@ -1,13 +1,12 @@
 import { createArray, assertExists, mapLinear } from './utils';
-import { Game } from './game';
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
-
-const DEFAULT_RESOLUTION = 320;
-const GameContext = React.createContext(new Game(DEFAULT_RESOLUTION));
+import React, { useEffect, useMemo, useRef } from 'react';
+import { useGame } from './gameContext';
+import { useControls } from './useControls';
+import { Screen } from '../components/screen';
 
 // Returns an array of refs, map them into divs inside a container
 function useBarRefs() {
-    const game = useContext(GameContext);
+    const game = useGame();
     const refs = useMemo(() => {
         return createArray(game.resolution, () => {
             return React.createRef<HTMLDivElement>();
@@ -22,11 +21,10 @@ function useBarRefs() {
                 const divRef = refs[idx].current;
                 assertExists(divRef);
 
-                const height = bar.height * 100;
-                const opacity = mapLinear(height, 0, 100, 0.2, 1);
+                const opacity = mapLinear(bar.height * bar.height, 0, 10000, 0.3, 1);
 
-                divRef.style.height = `${height}%`;
-                divRef.style.width = '2px';
+                divRef.style.height = `${bar.height}px`;
+                divRef.style.width = '3px';
                 divRef.style.backgroundColor = bar.color;
                 divRef.style.opacity = `${opacity}`;
             });
@@ -45,10 +43,16 @@ function useBarRefs() {
 }
 
 export function GameComponent(): JSX.Element {
+    useControls();
+
     const refs = useBarRefs();
     const bars = refs.map((ref, idx) => {
         return <div ref={ref} key={idx} />;
     });
 
-    return <div className="render-target">{bars}</div>;
+    return (
+        <div className="render-target">
+            <Screen>{bars}</Screen>
+        </div>
+    );
 }

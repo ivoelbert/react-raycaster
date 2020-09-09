@@ -4,6 +4,9 @@ body {
         'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    overflow: hidden;
+    background-color: #2b2b2b;
 }
 
 code {
@@ -12,8 +15,5 @@ code {
 
 .render-target {
     display: flex;
-    height: 480px;
-    width: 640px;
-    align-items: center;
-    background-color: black;
+    justify-content: center;
 }
