@@ -27,12 +27,14 @@ export function createRegularPolygon(
     sides: number,
     radius: number,
     ang: number,
-    color: string
+    color: string,
+    hollow: boolean = false
 ): Boundary[] {
     const angStep = (Math.PI * 2) / sides;
 
     const vertices = createArray(sides, (idx) => {
-        const angle = ang + idx * angStep;
+        const step = hollow ? idx * angStep : -idx * angStep;
+        const angle = ang - step;
         const px = radius * Math.cos(angle) + center.x;
         const py = radius * Math.sin(angle) + center.y;
 
@@ -40,4 +42,14 @@ export function createRegularPolygon(
     });
 
     return createPolygon(vertices, color);
+}
+
+export function createLine(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    color: string
+): Boundary {
+    return new Boundary(new Point(x1, y1), new Point(x2, y2), color);
 }
