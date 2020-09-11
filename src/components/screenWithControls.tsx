@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Screen } from './screen';
 import { Controls } from './controls/controls';
 
@@ -9,10 +9,16 @@ interface ScreenWithControlsProps {
 }
 
 export function ScreenWithControls(props: ScreenWithControlsProps): JSX.Element {
+    const [isScreenOn, setIsScreenOn] = useState<boolean>(true);
+
+    const toggleScreen = () => {
+        setIsScreenOn((isOn) => !isOn);
+    };
+
     return (
         <div className="screen-frame">
-            <Screen>{props.children}</Screen>
-            <Controls />
+            <Screen isOn={isScreenOn}>{props.children}</Screen>
+            <Controls isScreenOn={isScreenOn} toggleScreen={toggleScreen} />
         </div>
     );
 }

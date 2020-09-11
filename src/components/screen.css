@@ -9,7 +9,13 @@
         rgba(171, 195, 215, 1) 100%
     );
     height: 600px;
+    width: 960px;
     overflow: hidden;
-    width: fit-content;
     border: solid 1px #afafaf;
+}
+
+.off-screen {
+    height: 100%;
+    width: 100%;
+    background-color: #1b1b1b;
 }
