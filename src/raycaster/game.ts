@@ -3,7 +3,7 @@ import { LEVEL1 } from './levels/level1';
 import { Camera } from './camera';
 import { degToRad } from './utils';
 import { Bar } from './bar';
-import { FISHEYE_PROJECTION } from './projection';
+import { CORRECTED_PROJECTION, Projection } from './projection';
 import { Controls } from './controls';
 
 export class Game {
@@ -14,7 +14,7 @@ export class Game {
     constructor(private internalResolution: number) {
         this.scene = new Scene(LEVEL1);
         const fov = degToRad(75);
-        this.camera = new Camera(internalResolution, fov, FISHEYE_PROJECTION);
+        this.camera = new Camera(internalResolution, fov, CORRECTED_PROJECTION);
         this.internalControls = new Controls(this.camera);
     }
 
@@ -29,5 +29,13 @@ export class Game {
     render(): Bar[] {
         this.controls.update();
         return this.camera.render(this.scene);
+    }
+
+    setProjection(projection: Projection): void {
+        this.camera.setProjection(projection);
+    }
+
+    setFov(newFov: number): void {
+        this.camera.setFov(degToRad(newFov));
     }
 }

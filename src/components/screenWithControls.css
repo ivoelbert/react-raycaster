@@ -1,0 +1,6 @@
+.screen-frame {
+    border: Solid 20px #d4d4d4;
+    border-radius: 20px;
+    width: fit-content;
+    margin-top: 40px;
+}

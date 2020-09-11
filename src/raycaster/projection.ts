@@ -12,5 +12,6 @@ export const FISHEYE_PROJECTION: Projection = (distance, angle) => {
 };
 
 export const CORRECTED_PROJECTION: Projection = (distance, angle) => {
-    return 1 / (distance + 1);
+    const correctedDistance = distance * Math.cos(angle);
+    return FISHEYE_PROJECTION(correctedDistance, angle);
 };

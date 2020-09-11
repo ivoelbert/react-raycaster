@@ -45,3 +45,7 @@ export function assertExists<T>(value: T | nil): asserts value is T {
         throw new Error('Unexpected nil value');
     }
 }
+
+export function assertUnreachable(msg: string, value: never): never {
+    throw new Error(`${msg} ${value}`);
+}

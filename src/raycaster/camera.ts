@@ -2,7 +2,7 @@ import { Point } from './point';
 import { Bar } from './bar';
 import { RayCaster, Intersection } from './raycaster';
 import { Scene } from './scene';
-import { mapLinear, createArray } from './utils';
+import { mapLinear, createArray, degToRad } from './utils';
 import { Projection } from './projection';
 
 export class Camera {
@@ -12,6 +12,14 @@ export class Camera {
     constructor(private resolution: number, private fov: number, private projection: Projection) {
         this.pos = new Point(0, 0);
         this.angle = 0;
+    }
+
+    setProjection(projection: Projection): void {
+        this.projection = projection;
+    }
+
+    setFov(newFov: number): void {
+        this.fov = newFov;
     }
 
     move(deltaForwards: number, deltaSideways: number): void {
@@ -32,6 +40,7 @@ export class Camera {
 
         const minAng = -this.fov * 0.5;
         const maxAng = this.fov * 0.5;
+        const heightMultiplier = mapLinear(this.fov, degToRad(50), degToRad(100), 2, 1);
 
         return createArray(this.resolution, (idx) => {
             const ang = mapLinear(idx, 0, this.resolution - 1, minAng, maxAng);
@@ -49,7 +58,7 @@ export class Camera {
             }
 
             const closest = closestIntersection(nonNilIntersections);
-            const height = this.projection(closest.distance, ang);
+            const height = heightMultiplier * this.projection(closest.distance, ang);
 
             return new Bar(height, closest.boundary.color);
         });

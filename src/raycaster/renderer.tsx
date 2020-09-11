@@ -2,7 +2,6 @@ import { createArray, assertExists, mapLinear } from './utils';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useGame } from './gameContext';
 import { useControls } from './useControls';
-import { Screen } from '../components/screen';
 
 // Returns an array of refs, map them into divs inside a container
 function useBarRefs() {
@@ -21,7 +20,7 @@ function useBarRefs() {
                 const divRef = refs[idx].current;
                 assertExists(divRef);
 
-                const opacity = mapLinear(bar.height * bar.height, 0, 10000, 0.3, 1);
+                const opacity = mapLinear(bar.height * bar.height, 0, 10000, 0, 1);
 
                 divRef.style.height = `${bar.height}px`;
                 divRef.style.width = '3px';
@@ -50,9 +49,5 @@ export function GameComponent(): JSX.Element {
         return <div ref={ref} key={idx} />;
     });
 
-    return (
-        <div className="render-target">
-            <Screen>{bars}</Screen>
-        </div>
-    );
+    return <div className="render-target">{bars}</div>;
 }

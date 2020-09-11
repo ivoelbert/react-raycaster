@@ -1,0 +1,28 @@
+.controls-container {
+    background-color: #d4d4d4;
+    padding: 20px;
+    padding-bottom: 0;
+    display: flex;
+    gap: 24px;
+}
+
+.control-toggle-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.control-toggle {
+    font-size: 30px;
+    background-color: transparent;
+    border: solid 1px #afafaf;
+    border-radius: 5px;
+    outline: none;
+    min-width: 60px;
+}
+
+.fov-slider-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
