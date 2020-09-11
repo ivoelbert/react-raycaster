@@ -1,9 +1,8 @@
 import { Scene } from './scene';
 import { LEVEL1 } from './levels/level1';
 import { Camera } from './camera';
-import { degToRad } from './utils';
 import { Bar } from './bar';
-import { CORRECTED_PROJECTION, Projection } from './projection';
+import { Projection } from './projection';
 import { Controls } from './controls';
 
 export class Game {
@@ -13,8 +12,7 @@ export class Game {
 
     constructor(private internalResolution: number) {
         this.scene = new Scene(LEVEL1);
-        const fov = degToRad(75);
-        this.camera = new Camera(internalResolution, fov, CORRECTED_PROJECTION);
+        this.camera = new Camera(internalResolution);
         this.internalControls = new Controls(this.camera);
     }
 
@@ -36,6 +34,6 @@ export class Game {
     }
 
     setFov(newFov: number): void {
-        this.camera.setFov(degToRad(newFov));
+        this.camera.setFov(newFov);
     }
 }
