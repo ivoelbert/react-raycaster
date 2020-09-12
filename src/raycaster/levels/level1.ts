@@ -25,5 +25,3 @@ export const LEVEL1: Boundary[] = [
     ...PURPLE_TRIANGLE,
     ...YELLOW_HEX,
 ];
-
-console.log(JSON.stringify(LEVEL1));

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Screen } from './screen';
 import { Controls } from './controls/controls';
+import { GameComponent } from '../raycaster/renderer';
+import { DEFAULT_RESOLUTION } from './controls/resolutionControls';
 
 import './screenWithControls.css';
 
-interface ScreenWithControlsProps {
-    children: React.ReactNode;
-}
-
-export function ScreenWithControls(props: ScreenWithControlsProps): JSX.Element {
+export function ScreenWithControls(): JSX.Element {
     const [isScreenOn, setIsScreenOn] = useState<boolean>(true);
+    const [resolution, setResolution] = useState<number>(DEFAULT_RESOLUTION);
 
     const toggleScreen = () => {
         setIsScreenOn((isOn) => !isOn);
@@ -17,8 +16,15 @@ export function ScreenWithControls(props: ScreenWithControlsProps): JSX.Element 
 
     return (
         <div className="screen-frame">
-            <Screen isOn={isScreenOn}>{props.children}</Screen>
-            <Controls isScreenOn={isScreenOn} toggleScreen={toggleScreen} />
+            <Screen isOn={isScreenOn}>
+                <GameComponent resolution={resolution} />
+            </Screen>
+            <Controls
+                isScreenOn={isScreenOn}
+                toggleScreen={toggleScreen}
+                resolution={resolution}
+                setResolution={setResolution}
+            />
         </div>
     );
 }

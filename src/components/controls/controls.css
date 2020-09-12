@@ -21,7 +21,7 @@
     min-width: 60px;
 }
 
-.fov-slider-container {
+.slider-container {
     display: flex;
     align-items: center;
     height: 100%;

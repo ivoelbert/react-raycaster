@@ -10,9 +10,9 @@ export class Game {
     private camera: Camera;
     private internalControls: Controls;
 
-    constructor(private internalResolution: number) {
+    constructor() {
         this.scene = new Scene(LEVEL1);
-        this.camera = new Camera(internalResolution);
+        this.camera = new Camera();
         this.internalControls = new Controls(this.camera);
     }
 
@@ -20,13 +20,9 @@ export class Game {
         return this.internalControls;
     }
 
-    get resolution(): number {
-        return this.internalResolution;
-    }
-
-    render(): Bar[] {
+    render(resolution: number): Bar[] {
         this.controls.update();
-        return this.camera.render(this.scene);
+        return this.camera.render(this.scene, resolution);
     }
 
     setProjection(projection: Projection): void {

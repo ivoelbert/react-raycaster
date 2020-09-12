@@ -19,7 +19,7 @@ export class Camera {
     private fov: number;
     private projection: Projection;
 
-    constructor(private resolution: number) {
+    constructor() {
         this.pos = new Point(0, 0);
         this.angle = 0;
         this.fov = RAD_DEFAULT_FOV;
@@ -47,15 +47,15 @@ export class Camera {
         this.angle += ang;
     }
 
-    render(scene: Scene): Bar[] {
+    render(scene: Scene, resolution: number): Bar[] {
         const raycaster = new RayCaster(this.pos);
 
         const minAng = -this.fov * 0.5;
         const maxAng = this.fov * 0.5;
         const heightMultiplier = getHeightMultiplier(this.fov);
 
-        return createArray(this.resolution, (idx) => {
-            const ang = mapLinear(idx, 0, this.resolution - 1, minAng, maxAng);
+        return createArray(resolution, (idx) => {
+            const ang = mapLinear(idx, 0, resolution - 1, minAng, maxAng);
 
             const intersections = scene.traverse((boundary) => {
                 return raycaster.castAtAngle(this.angle + ang, boundary);

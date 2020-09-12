@@ -15,7 +15,7 @@ export function FovControls(): JSX.Element {
 
     return (
         <ControlsSection title="FOV">
-            <div className="fov-slider-container">
+            <div className="slider-container">
                 <input
                     type="range"
                     min={String(MIN_FOV)}
