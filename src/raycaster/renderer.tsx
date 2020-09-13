@@ -4,7 +4,7 @@ import { useGame } from './gameContext';
 import { useControls } from './useControls';
 
 // Returns an array of refs, map them into divs inside a container
-function useBarRefs(resolution: number) {
+function useGameRefs(resolution: number) {
     const game = useGame();
     const refs = useMemo(() => {
         return createArray(resolution, () => {
@@ -49,7 +49,7 @@ interface GameComponentProps {
 export function GameComponent(props: GameComponentProps): JSX.Element {
     useControls();
 
-    const refs = useBarRefs(props.resolution);
+    const refs = useGameRefs(props.resolution);
     const bars = refs.map((ref, idx) => {
         return <div ref={ref} key={idx} />;
     });

@@ -6,12 +6,12 @@ import { Projection } from './projection';
 import { Controls } from './controls';
 
 export class Game {
-    private scene: Scene;
+    private internalScene: Scene;
     private camera: Camera;
     private internalControls: Controls;
 
     constructor() {
-        this.scene = new Scene(LEVEL1);
+        this.internalScene = new Scene(LEVEL1);
         this.camera = new Camera();
         this.internalControls = new Controls(this.camera);
     }
@@ -20,9 +20,13 @@ export class Game {
         return this.internalControls;
     }
 
+    get scene(): Scene {
+        return this.internalScene;
+    }
+
     render(resolution: number): Bar[] {
         this.controls.update();
-        return this.camera.render(this.scene, resolution);
+        return this.camera.render(this.internalScene, resolution);
     }
 
     setProjection(projection: Projection): void {

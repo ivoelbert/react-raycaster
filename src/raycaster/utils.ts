@@ -29,7 +29,7 @@ export const ANGLES = {
     left: Math.PI,
 };
 
-const DEG_TO_RAD_RATIO = 0.01745329251;
+const DEG_TO_RAD_RATIO = Math.PI / 180;
 export function degToRad(angle: number): number {
     return angle * DEG_TO_RAD_RATIO;
 }
@@ -40,6 +40,10 @@ export function isNil<T>(value: T | nil): value is nil {
     return value === null || value === undefined;
 }
 
+export function isNotNil<T>(value: T | nil): value is T {
+    return value !== null && value !== undefined;
+}
+
 export function assertExists<T>(value: T | nil): asserts value is T {
     if (isNil(value)) {
         throw new Error('Unexpected nil value');
@@ -48,4 +52,10 @@ export function assertExists<T>(value: T | nil): asserts value is T {
 
 export function assertUnreachable(msg: string, value: never): never {
     throw new Error(`${msg} ${value}`);
+}
+
+export function assertCondition(condition: boolean): asserts condition is true {
+    if (!condition) {
+        throw new Error('Unexpected false condition');
+    }
 }
