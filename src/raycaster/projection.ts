@@ -15,3 +15,15 @@ export const CORRECTED_PROJECTION: Projection = (distance, angle) => {
     const correctedDistance = distance * Math.cos(angle);
     return FISHEYE_PROJECTION(correctedDistance, angle);
 };
+
+export enum ProjectionNames {
+    fisheye = 'fisheye',
+    corrected = 'corrected',
+}
+
+type ProjectionByName = Record<ProjectionNames, Projection>;
+
+export const PROJECTIONS_BY_NAME: ProjectionByName = {
+    [ProjectionNames.fisheye]: FISHEYE_PROJECTION,
+    [ProjectionNames.corrected]: CORRECTED_PROJECTION,
+};

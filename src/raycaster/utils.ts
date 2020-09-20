@@ -34,6 +34,10 @@ export function degToRad(angle: number): number {
     return angle * DEG_TO_RAD_RATIO;
 }
 
+export function radToDeg(angle: number): number {
+    return angle / DEG_TO_RAD_RATIO;
+}
+
 export type nil = null | undefined;
 
 export function isNil<T>(value: T | nil): value is nil {

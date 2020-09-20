@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useState } from 'react';
-import { DEFAULT_FOV, MAX_FOV, MIN_FOV } from '../../raycaster/camera';
+import { MAX_FOV, MIN_FOV } from '../../raycaster/camera';
 import { useGame } from '../../raycaster/gameContext';
 import { ControlsSection } from './controlsSection';
 
 export function FovControls(): JSX.Element {
-    const [value, setValue] = useState<number>(DEFAULT_FOV);
     const game = useGame();
+    const [value, setValue] = useState<number>(game.fov);
 
     const onChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const newValue = Number(e.target.value);

@@ -1,10 +1,17 @@
 import { Boundary } from './boundary';
+import { Level } from './levels/level';
+import { SpriteEntity } from './spriteEntity';
 
-export type TraverseFunction<T> = (boundary: Boundary) => T;
+export type TraverseFunction<Obj, Result> = (obj: Obj, idx: number) => Result;
+
 export class Scene {
-    constructor(private boundaries: Boundary[]) {}
+    constructor(private level: Level) {}
 
-    traverse<T>(callback: TraverseFunction<T>): T[] {
-        return this.boundaries.map(callback);
+    traverseBoundaries<T>(callback: TraverseFunction<Boundary, T>): T[] {
+        return this.level.boundaries.map(callback);
+    }
+
+    traverseEntities<T>(callback: TraverseFunction<SpriteEntity, T>): T[] {
+        return this.level.entities.map(callback);
     }
 }

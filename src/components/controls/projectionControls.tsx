@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
-import { CORRECTED_PROJECTION, FISHEYE_PROJECTION, Projection } from '../../raycaster/projection';
+import { ProjectionNames } from '../../raycaster/projection';
 import { assertUnreachable } from '../../raycaster/utils';
 import { ControlsSection } from './controlsSection';
 import { faCubes, faFish } from '@fortawesome/free-solid-svg-icons';
@@ -14,29 +14,17 @@ export function ProjectionControls(): JSX.Element {
     );
 }
 
-enum ProjectionNames {
-    fisheye = 'fisheye',
-    corrected = 'corrected',
-}
-
-type ProjectionByName = Record<ProjectionNames, Projection>;
-
-const PROJECTIONS_BY_NAME: ProjectionByName = {
-    [ProjectionNames.fisheye]: FISHEYE_PROJECTION,
-    [ProjectionNames.corrected]: CORRECTED_PROJECTION,
-};
-
 function ProjectionToggleButton(): JSX.Element {
-    const [projection, setProjection] = useState<ProjectionNames>(ProjectionNames.corrected);
     const game = useGame();
+    const [projection, setProjection] = useState<ProjectionNames>(game.projection);
 
     const toggleProjection = () => {
         if (projection === ProjectionNames.corrected) {
             setProjection(ProjectionNames.fisheye);
-            game.setProjection(PROJECTIONS_BY_NAME[ProjectionNames.fisheye]);
+            game.setProjection(ProjectionNames.fisheye);
         } else {
             setProjection(ProjectionNames.corrected);
-            game.setProjection(PROJECTIONS_BY_NAME[ProjectionNames.corrected]);
+            game.setProjection(ProjectionNames.corrected);
         }
     };
 

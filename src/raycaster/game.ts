@@ -1,8 +1,8 @@
 import { Scene } from './scene';
 import { LEVEL1 } from './levels/level1';
-import { Camera } from './camera';
+import { Camera, PlayerInfo } from './camera';
 import { Bar } from './bar';
-import { Projection } from './projection';
+import { ProjectionNames } from './projection';
 import { Controls } from './controls';
 
 export class Game {
@@ -24,16 +24,28 @@ export class Game {
         return this.internalScene;
     }
 
+    get playerInfo(): PlayerInfo {
+        return this.camera.getPlayerInfo();
+    }
+
     render(resolution: number): Bar[] {
         this.controls.update();
         return this.camera.render(this.internalScene, resolution);
     }
 
-    setProjection(projection: Projection): void {
+    setProjection(projection: ProjectionNames): void {
         this.camera.setProjection(projection);
+    }
+
+    get projection(): ProjectionNames {
+        return this.camera.getProjection();
     }
 
     setFov(newFov: number): void {
         this.camera.setFov(newFov);
+    }
+
+    get fov(): number {
+        return this.camera.getFov();
     }
 }
