@@ -20,3 +20,7 @@ export class SpriteEntity {
         return this.internalPosition;
     }
 }
+
+export class RenderSprite {
+    constructor(readonly isVisible: boolean, readonly position: Point) {}
+}

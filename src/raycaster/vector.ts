@@ -1,4 +1,6 @@
+import { Angle } from './angle';
 import { Boundary } from './boundary';
+import { Point } from './point';
 import { assertCondition } from './utils';
 
 const EPSILON_ZERO_VECTOR = 0.00001;
@@ -8,6 +10,10 @@ export class Vector {
 
     static fromBoundary(boundary: Boundary): Vector {
         return new Vector(boundary.b.x - boundary.a.x, boundary.b.y - boundary.a.y);
+    }
+
+    static fromPoints(a: Point, b: Point): Vector {
+        return new Vector(b.x - a.x, b.y - a.y);
     }
 
     add(v: Vector): Vector {
@@ -27,12 +33,12 @@ export class Vector {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
-    angle(): number {
-        return Math.atan2(this.y, this.x);
+    angle(): Angle {
+        return Angle.fromRadians(Math.atan2(this.y, this.x));
     }
 
     // Returns the polar coordinates for a vector [length, angle]
-    toPolar(): [number, number] {
+    toPolar(): [number, Angle] {
         const length = this.length();
         assertCondition(length > EPSILON_ZERO_VECTOR);
         const angle = this.angle();

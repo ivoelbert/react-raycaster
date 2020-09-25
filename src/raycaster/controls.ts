@@ -1,3 +1,4 @@
+import { Angle } from './angle';
 import { Camera } from './camera';
 import { isNil } from './utils';
 import { Vector } from './vector';
@@ -75,6 +76,6 @@ export class Controls {
         const rotation = this.getRotation() * this.rotateSpeed;
 
         this.camera.move(forwardsMovement, sidewaysMovement);
-        this.camera.rotate(rotation);
+        this.camera.rotate(Angle.fromRadians(rotation));
     }
 }

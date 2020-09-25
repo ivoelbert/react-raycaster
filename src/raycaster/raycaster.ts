@@ -1,5 +1,8 @@
 import { Boundary } from './boundary';
 import { Point } from './point';
+import { SpriteEntity } from './sprites';
+import { Vector } from './vector';
+import { Angle } from './angle';
 
 // Based on https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
 
@@ -45,6 +48,12 @@ export class RayCaster {
         } else {
             return null;
         }
+    }
+
+    // Returns the angle to the sprite. Visible if this is in the FOV.
+    castToEntity(entity: SpriteEntity): Angle {
+        const lineOfSight = Vector.fromPoints(this.pos, entity.position);
+        return lineOfSight.angle();
     }
 }
 

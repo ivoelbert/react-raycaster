@@ -1,6 +1,7 @@
 import React from 'react';
 import { GameComponent } from '../raycaster/renderer';
 import { SceneViewer } from '../raycaster/sceneViewer/viewer';
+import { useControls } from '../raycaster/useControls';
 
 import './screen.css';
 
@@ -11,6 +12,8 @@ interface ScreenProps {
 }
 
 export function Screen(props: ScreenProps): JSX.Element {
+    useControls();
+
     if (props.isInGame) {
         return (
             <div className="screen">

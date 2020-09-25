@@ -2,31 +2,29 @@ import { Point } from './point';
 import { Bar } from './bar';
 import { RayCaster, Intersection } from './raycaster';
 import { Scene } from './scene';
-import { mapLinear, createArray, degToRad, isNotNil, radToDeg } from './utils';
+import { mapLinear, createArray, isNotNil } from './utils';
 import { ProjectionNames, PROJECTIONS_BY_NAME } from './projection';
+import { RenderSprite } from './sprites';
+import { Angle } from './angle';
 
-export const MIN_FOV = 50;
-export const MAX_FOV = 120;
-export const DEFAULT_FOV = 90;
-
-const RAD_MIN_FOV = degToRad(MIN_FOV);
-const RAD_MAX_FOV = degToRad(MAX_FOV);
-const RAD_DEFAULT_FOV = degToRad(DEFAULT_FOV);
+export const MIN_FOV = Angle.fromDegrees(50);
+export const MAX_FOV = Angle.fromDegrees(120);
+export const DEFAULT_FOV = Angle.fromDegrees(90);
 
 export class PlayerInfo {
-    constructor(readonly position: Point, readonly angle: number) {}
+    constructor(readonly position: Point, readonly angle: Angle) {}
 }
 
 export class Camera {
     private pos: Point;
-    private angle: number;
-    private fov: number;
+    private angle: Angle;
+    private fov: Angle;
     private projection: ProjectionNames;
 
     constructor() {
         this.pos = new Point(0, 0);
-        this.angle = 0;
-        this.fov = RAD_DEFAULT_FOV;
+        this.angle = Angle.fromRadians(0);
+        this.fov = DEFAULT_FOV;
         this.projection = ProjectionNames.corrected;
     }
 
@@ -42,33 +40,48 @@ export class Camera {
         return this.projection;
     }
 
-    setFov(newFov: number): void {
-        this.fov = degToRad(newFov);
+    setFov(newFov: Angle): void {
+        this.fov = newFov;
     }
 
-    getFov(): number {
-        return radToDeg(this.fov);
+    getFov(): Angle {
+        return this.fov;
     }
 
     move(deltaForwards: number, deltaSideways: number): void {
-        const forwardsX = Math.cos(this.angle) * deltaForwards;
-        const forwardsY = Math.sin(this.angle) * deltaForwards;
-        const sidewaysX = Math.cos(this.angle + Math.PI * 0.5) * deltaSideways;
-        const sidewaysY = Math.sin(this.angle + Math.PI * 0.5) * deltaSideways;
+        const forwardsX = Math.cos(this.angle.radians) * deltaForwards;
+        const forwardsY = Math.sin(this.angle.radians) * deltaForwards;
+        const sidewaysX = Math.cos(this.angle.radians + Math.PI * 0.5) * deltaSideways;
+        const sidewaysY = Math.sin(this.angle.radians + Math.PI * 0.5) * deltaSideways;
         this.pos.x += forwardsX + sidewaysX;
         this.pos.y += forwardsY + sidewaysY;
     }
 
-    rotate(ang: number): void {
-        this.angle += ang;
+    rotate(ang: Angle): void {
+        this.angle = this.angle.add(ang);
     }
 
-    render(scene: Scene, resolution: number): Bar[] {
-        const projection = PROJECTIONS_BY_NAME[this.projection];
+    renderSprites(scene: Scene): RenderSprite[] {
         const raycaster = new RayCaster(this.pos);
 
-        const minAng = -this.fov * 0.5;
-        const maxAng = this.fov * 0.5;
+        return scene.traverseEntities((entity) => {
+            const angle = raycaster.castToEntity(entity);
+
+            const minAngle = this.angle.add(this.fov.multiplyScalar(-0.5));
+            const maxAngle = this.angle.add(this.fov.multiplyScalar(0.5));
+
+            const isVisible = angle.isBetween(minAngle, maxAngle);
+
+            return new RenderSprite(isVisible, entity.position);
+        });
+    }
+
+    renderBoundaries(scene: Scene, resolution: number): Bar[] {
+        const raycaster = new RayCaster(this.pos);
+        const projection = PROJECTIONS_BY_NAME[this.projection];
+
+        const minAng = -this.fov.radians * 0.5;
+        const maxAng = this.fov.radians * 0.5;
         const heightMultiplier = getHeightMultiplier(this.fov);
 
         return createArray(resolution, (idx) => {
@@ -76,7 +89,7 @@ export class Camera {
 
             const intersections = scene
                 .traverseBoundaries((boundary) => {
-                    return raycaster.castAtAngle(this.angle + ang, boundary);
+                    return raycaster.castAtAngle(this.angle.radians + ang, boundary);
                 })
                 .filter(isNotNil);
 
@@ -92,8 +105,8 @@ export class Camera {
     }
 }
 
-function getHeightMultiplier(fov: number): number {
-    return mapLinear(fov, RAD_MIN_FOV, RAD_MAX_FOV, 2, 1);
+function getHeightMultiplier(fov: Angle): number {
+    return mapLinear(fov.radians, MIN_FOV.radians, MAX_FOV.radians, 2, 1);
 }
 
 function closestIntersection(intersections: Intersection[]): Intersection {

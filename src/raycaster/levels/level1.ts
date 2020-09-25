@@ -1,8 +1,8 @@
 import { Boundary } from '../boundary';
 import { Point } from '../point';
-import { createRect, createRegularPolygon } from './utils';
+import { createGuard, createRect, createRegularPolygon } from './utils';
 import { ANGLES } from '../utils';
-import { SpriteEntity } from '../spriteEntity';
+import { SpriteEntity } from '../sprites';
 import { Level } from './level';
 
 const OUTER_COLOR = '#0040a6';
@@ -28,6 +28,11 @@ const BOUNDARIES: Boundary[] = [
     ...YELLOW_HEX,
 ];
 
-const ENTITIES: SpriteEntity[] = [];
+const ENTITIES: SpriteEntity[] = [
+    createGuard(3, 0),
+    createGuard(-3, 0),
+    createGuard(0, 3),
+    createGuard(0, -3),
+];
 
 export const LEVEL1 = new Level(BOUNDARIES, ENTITIES);

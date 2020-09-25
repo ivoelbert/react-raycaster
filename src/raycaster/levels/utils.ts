@@ -1,6 +1,7 @@
 import { Point } from '../point';
 import { Boundary } from '../boundary';
 import { createArray } from '../utils';
+import { SpriteEntity, Sprites } from '../sprites';
 
 export function createPolygon(vertices: Point[], color: string): Boundary[] {
     return createArray(vertices.length, (idx) => {
@@ -52,4 +53,8 @@ export function createLine(
     color: string
 ): Boundary {
     return new Boundary(new Point(x1, y1), new Point(x2, y2), color);
+}
+
+export function createGuard(x: number, y: number): SpriteEntity {
+    return new SpriteEntity(Sprites.guard, new Point(x, y));
 }

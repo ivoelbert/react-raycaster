@@ -48,6 +48,14 @@ export function isNotNil<T>(value: T | nil): value is T {
     return value !== null && value !== undefined;
 }
 
+export function checkExists<T>(value: T | nil): T {
+    if (isNil(value)) {
+        throw new Error('Unexpected nil value');
+    }
+
+    return value;
+}
+
 export function assertExists<T>(value: T | nil): asserts value is T {
     if (isNil(value)) {
         throw new Error('Unexpected nil value');
