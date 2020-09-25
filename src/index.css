@@ -20,11 +20,22 @@ code {
 }
 
 .render-target {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
     width: 100%;
+}
+
+.sprite {
+    position: absolute;
+    top: 50%;
+    transform-origin: bottom center;
+    transform: translate(-50%, -50%) scale(0.7);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 
 h1,

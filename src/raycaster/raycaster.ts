@@ -16,7 +16,7 @@ const RAY_LENGTH = 1000;
 export class RayCaster {
     constructor(private pos: Point) {}
 
-    castAtAngle(angle: number, boundary: Boundary): Intersection | null {
+    castAtAngle(angle: number, boundary: Boundary): BoundaryIntersection | null {
         const dirX = Math.cos(angle) * RAY_LENGTH;
         const dirY = Math.sin(angle) * RAY_LENGTH;
 
@@ -44,19 +44,23 @@ export class RayCaster {
             const intersectionPoint = new Point(intersectionX, intersectionY);
             const distance = this.pos.distanceTo(intersectionPoint);
 
-            return new Intersection(intersectionPoint, boundary, distance);
+            return new BoundaryIntersection(intersectionPoint, boundary, distance);
         } else {
             return null;
         }
     }
 
     // Returns the angle to the sprite. Visible if this is in the FOV.
-    castToEntity(entity: SpriteEntity): Angle {
+    castToEntity(entity: SpriteEntity): EntityIntersection {
         const lineOfSight = Vector.fromPoints(this.pos, entity.position);
-        return lineOfSight.angle();
+        return new EntityIntersection(lineOfSight.angle(), lineOfSight.length());
     }
 }
 
-export class Intersection {
+export class BoundaryIntersection {
     constructor(readonly point: Point, readonly boundary: Boundary, readonly distance: number) {}
+}
+
+export class EntityIntersection {
+    constructor(readonly angle: Angle, readonly distance: number) {}
 }

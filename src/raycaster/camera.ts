@@ -1,6 +1,6 @@
 import { Point } from './point';
 import { Bar } from './bar';
-import { RayCaster, Intersection } from './raycaster';
+import { RayCaster, BoundaryIntersection } from './raycaster';
 import { Scene } from './scene';
 import { mapLinear, createArray, isNotNil } from './utils';
 import { ProjectionNames, PROJECTIONS_BY_NAME } from './projection';
@@ -10,6 +10,7 @@ import { Angle } from './angle';
 export const MIN_FOV = Angle.fromDegrees(50);
 export const MAX_FOV = Angle.fromDegrees(120);
 export const DEFAULT_FOV = Angle.fromDegrees(90);
+const SPRITE_HEIGHT_RATIO = 1;
 
 export class PlayerInfo {
     constructor(readonly position: Point, readonly angle: Angle) {}
@@ -63,16 +64,21 @@ export class Camera {
 
     renderSprites(scene: Scene): RenderSprite[] {
         const raycaster = new RayCaster(this.pos);
+        const projection = PROJECTIONS_BY_NAME[ProjectionNames.fisheye];
+        const heightMultiplier = getHeightMultiplier(this.fov) * SPRITE_HEIGHT_RATIO;
 
         return scene.traverseEntities((entity) => {
-            const angle = raycaster.castToEntity(entity);
+            const { angle, distance } = raycaster.castToEntity(entity);
 
             const minAngle = this.angle.add(this.fov.multiplyScalar(-0.5));
             const maxAngle = this.angle.add(this.fov.multiplyScalar(0.5));
 
-            const isVisible = angle.isBetween(minAngle, maxAngle);
+            const factor = angle.lerpFactor(minAngle, maxAngle);
+            const isVisible = 0 < factor && factor < 1;
+            const dx = isVisible ? factor : null;
+            const height = heightMultiplier * projection(distance, angle.radians);
 
-            return new RenderSprite(isVisible, entity.position);
+            return new RenderSprite(dx, height, entity);
         });
     }
 
@@ -109,9 +115,12 @@ function getHeightMultiplier(fov: Angle): number {
     return mapLinear(fov.radians, MIN_FOV.radians, MAX_FOV.radians, 2, 1);
 }
 
-function closestIntersection(intersections: Intersection[]): Intersection {
+function closestIntersection(intersections: BoundaryIntersection[]): BoundaryIntersection {
     return intersections.reduce(
-        (closest: Intersection, intersection: Intersection): Intersection => {
+        (
+            closest: BoundaryIntersection,
+            intersection: BoundaryIntersection
+        ): BoundaryIntersection => {
             if (intersection.distance < closest.distance) {
                 return intersection;
             } else {

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useFrame, useGame } from '../gameContext';
-import { assertExists, createArray } from '../utils';
+import { assertExists, createArray, isNotNil } from '../utils';
 
 interface SpritesProps {
     scale: number;
@@ -35,7 +35,9 @@ function useSpritesRefs(scale: number) {
             const divRef = refs[idx].current;
             assertExists(divRef);
 
-            const { isVisible, position } = sprite;
+            const { dx, entity } = sprite;
+            const { position } = entity;
+            const isVisible = isNotNil(dx);
             const size = SPRITE_SIZE * scale;
             const px = position.x * scale - size * 0.5;
             const py = position.y * scale - size * 0.5;

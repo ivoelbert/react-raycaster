@@ -21,6 +21,13 @@ export class SpriteEntity {
     }
 }
 
+/**
+ * dx: [0, 1], screen x coordinate (size independent)
+ */
 export class RenderSprite {
-    constructor(readonly isVisible: boolean, readonly position: Point) {}
+    constructor(
+        readonly dx: number | null,
+        readonly height: number,
+        readonly entity: SpriteEntity
+    ) {}
 }
